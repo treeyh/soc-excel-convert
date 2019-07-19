@@ -2,7 +2,7 @@
 
 Convert Excel to markdown, json ...
 
-[中文](https://)
+[中文](https://github.com/treeyh/soc-excel-convert/blob/master/docs/zh-CN/README.md)
 
 ## INSTALL
 
