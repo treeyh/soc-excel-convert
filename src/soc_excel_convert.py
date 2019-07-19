@@ -2,20 +2,19 @@
 
 import os
 import sys
-import json
 
 import argparse
 
 
 
-from utils import excel_utils, file_utils
+from utils import excel_utils, file_utils, str_utils
 from result_code import ResultCode
 
 
 
 
 def print_msg(msg, result_code = None):
-    print(json.dumps(msg))
+    print(str_utils.json_encode(msg))
     if None != result_code:
         sys.exit(result_code)
 
@@ -46,15 +45,15 @@ content内容结构：
             "endIndex": 3,
             "data": [
                 {
-                    "title": "name1",
+                    "content": "name1",
                     "horizontal": "left"
                 },
                 {
-                    "title": "name2",
+                    "content": "name2",
                     "horizontal": "middle"
                 },
                 {
-                    "title": "name3",
+                    "content": "name3",
                     "horizontal": "right"
                 }
             ]
@@ -64,18 +63,30 @@ content内容结构：
                 "beginIndex": 1,
                 "endIndex": 3,
                 "data": [
-                    "1",
-                    "aaa",
-                    "ccc"
+                    {
+                    "content": "name1"
+                },
+                {
+                    "content": "name2"
+                },
+                {
+                    "content": "name3"
+                }
                 ]
             },
             {
                 "beginIndex": 1,
                 "endIndex": 3,
                 "data": [
-                    "1",
-                    "2",
-                    "3"
+                    {
+                    "content": "name1"
+                },
+                {
+                    "content": "name2"
+                },
+                {
+                    "content": "name3"
+                }
                 ]
             }
         ]
@@ -135,12 +146,14 @@ def read_excel_content(wb, sheetName):
 
                 columnName = excel_utils.get_column_code_by_index(colIndex)
                 cell = ws[columnName + str(rowIndex)]
-                info = {'title': value, 'horizontal': cell.alignment.horizontal}
+                info = {'content': value, 'horizontal': cell.alignment.horizontal}
                 row["data"].append(info)
                 pass
             else:
                 # 已有标题
-                row["data"].append(value)
+                row["data"].append({
+                    "content": value
+                })
 
 
         row['data'] = row['data'][:(row['endIndex'] - row['beginIndex'] + 1)]
@@ -192,7 +205,7 @@ def build_content(content, mode):
                 continue
             idx = i - beginIndex
             if idx < len(content['title']['data']):
-                title += str(content['title']['data'][idx]['title'])
+                title += str(content['title']['data'][idx]['content'])
                 horizontal += get_markdown_horizontal(content['title']['data'][idx]['horizontal'])
             title += sep
             horizontal += sep
@@ -208,7 +221,7 @@ def build_content(content, mode):
                     continue
                 idx = i - beginIndex
                 if idx < len(row['data']):
-                    c += str(row['data'][idx])
+                    c += str(row['data'][idx]['content'])
                 c += sep
             md += c + linesep
         return md
