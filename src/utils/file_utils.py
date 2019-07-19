@@ -173,15 +173,16 @@ def read_line_file(filePath, method='r', callBack=None):
 #     for line in lines:
 #         pass # do something
 
-def write_file(filePath, content, method='w'):
+def write_file(filePath, content, method='w', encoding='utf-8'):
     '''
         写文件
         filePath：文件路径
         content：文件内容
         method：写入方式，'w'覆盖写，'a' 续写，'wb' 二进制覆盖写
+        encoding: 字符编码,默认 utf-8
     '''
     mkdirs(filePath, False)
-    fh = open(filePath, method)
+    fh = open(filePath, method, encoding=encoding)
 
     try:
         fh.write(content)

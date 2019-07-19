@@ -174,41 +174,43 @@ def build_content(content, mode):
     ''' 构造保存文件内容 '''
     if mode == 'md':
         md = ''
+        linesep = '\n'
+        sep = '|'
         maxBeginIndex = content['maxBeginIndex']
         maxEndIndex = content['maxEndIndex']
 
         if content['maxBeginIndex'] < 1:
             return md
 
-        title = '|'
-        horizontal = '|'
+        title = sep
+        horizontal = sep
         beginIndex = content['title']['beginIndex']
         for i in range(maxBeginIndex, maxEndIndex + 1):
             if i < beginIndex:
-                title += '|'
-                horizontal += get_markdown_horizontal('') + '|'
+                title += sep
+                horizontal += get_markdown_horizontal('') + sep
                 continue
             idx = i - beginIndex
             if idx < len(content['title']['data']):
                 title += str(content['title']['data'][idx]['title'])
                 horizontal += get_markdown_horizontal(content['title']['data'][idx]['horizontal'])
-            title += '|'
-            horizontal += '|'
+            title += sep
+            horizontal += sep
 
-        md = title + os.linesep + horizontal + os.linesep
+        md = title + linesep + horizontal + linesep
 
         for row in content['data']:
             beginIndex = row['beginIndex']
-            c = '|'
+            c = sep
             for i in range(maxBeginIndex, maxEndIndex + 1):
                 if i < beginIndex:
-                    title += '|'
+                    title += sep
                     continue
                 idx = i - beginIndex
                 if idx < len(row['data']):
                     c += str(row['data'][idx])
-                c += '|'
-            md += c + os.linesep
+                c += sep
+            md += c + linesep
         return md
     else:
         return ''
