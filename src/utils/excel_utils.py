@@ -31,13 +31,13 @@ def get_active_sheet(wb):
     return wb.active
 
 
-def get_sheet_by_name(wb, title):
+def get_sheet_by_name(wb, sheetName):
     '''
         返回标题匹配的sheet
         wb：excel的workbook对象
-        title：sheet的标题
+        sheetName：sheet的标题
     '''
-    return wb.get_sheet_by_name(title)
+    return wb.get_sheet_by_name(sheetName)
 
 def get_sheet_names(wb):
     '''
@@ -54,6 +54,32 @@ def get_cell_val(ws, row, col):
         col:列索引，0开始
     '''
     return ws.cell(row = row, column = col).value
+
+
+def get_column_code_by_index(index):
+    '''
+    根据索引编号，获取excel列编号
+    :param index: 索引编号，从1开始
+    :return:
+    '''
+    if index > 16384 or index < 1:
+        # 超过excel最大列数，或者小于最小索引
+        return ''
+    charSize = 26
+    indexName = ''
+    for i in range(0, 5):
+        tmp = index % charSize
+        index = (int)((index - 1) / charSize)
+        if tmp == 0:
+            tmp = charSize
+
+        indexName = chr(64+tmp) + indexName
+        if index <= 0:
+            break
+    return indexName
+
+
+
 
 
 
