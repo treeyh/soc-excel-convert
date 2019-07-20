@@ -23,7 +23,7 @@ soc-excel-convert -e ./test/excel/demo1.xlsx
 |短参数名|长参数名|是否必传|默认值|描述|
 |:--|:--|:--:|:--:|:--|
 |-e|--excel|Y|None|指定需要转换的excel文件路径|
-|-m|--mode|N|md|指定转换格式, 可选参数: md(markdown)和json. 不传默认为md. 目前仅支持md;|
+|-m|--mode|N|md|指定转换格式, 可选参数: md(markdown)和json. <br />不传默认为md. 目前仅支持md;|
 |-s|--sheets|N|''|指定输出哪些sheet表格, 不传输出所有;|
-|-t|--target|N|./{fileName}/|输出目标路径. 不传默认当前目录. 如果目录不存在则会自动创建;|
+|-t|--target|N|./{fileName}/|输出目标路径. 不传默认当前目录. <br />如果目录不存在则会自动创建;|
 
