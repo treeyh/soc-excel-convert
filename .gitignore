@@ -176,3 +176,5 @@ atlassian-ide-plugin.xml
 
 # Python venv
 /venv
+
+/demo1
