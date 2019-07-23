@@ -1,13 +1,27 @@
 #-*- encoding: utf-8 -*-
 
+import os
+import io
+
 from setuptools import find_packages, setup
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+
+if os.path.exists("requirements.txt"):
+    with open("README.md", "r") as fh:
+        long_description = fh.read()
+else:
+    long_description = ""
+
+if os.path.exists("requirements.txt"):
+    with open("requirements.txt", "r") as fh:
+        install_requires = fh.read().split("\n")
+else:
+    install_requires = []
+
 
 setup(
     name="soc-excel-convert",
-    version="0.1.0",
+    version="1.0.0",
     author="Tree",
     author_email="tree@ejyi.com",
     description="Convert Excel to markdown ....",
@@ -30,11 +44,11 @@ setup(
 
     entry_points={
         "console_scripts": [
-            "soc-excel-convert=soc-excel-convert._internal:main",
+            "soc-excel-convert=soc_excel_convert._internal:main",
         ],
     },
 
-    install_requires=['et-xmlfile>=1.0.1', 'jdcal>=1.4.1', 'openpyxl>=2.6.2'],
+    install_requires=install_requires,
     zip_safe=False,
     python_requires='>=3',
 )

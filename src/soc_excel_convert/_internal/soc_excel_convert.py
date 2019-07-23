@@ -139,11 +139,15 @@ def read_excel_content(wb, sheetName):
             row['beginIndex'] = colIndex if row['beginIndex'] < 1 else row['beginIndex']
             row['endIndex'] = colIndex if (value is not None and value != "") else row['endIndex']
 
+            if value is None:
+                value = ""
+
             if content['maxBeginIndex'] < 1:
                 # 还没有标题，需要分析标题对齐位置
 
                 columnName = excel_utils.get_column_code_by_index(colIndex)
                 cell = ws[columnName + str(rowIndex)]
+
                 info = {'content': value, 'horizontal': cell.alignment.horizontal}
                 row["data"].append(info)
                 pass
@@ -180,6 +184,18 @@ def get_markdown_horizontal(horizontal):
     else:
         return '--:'
 
+def format_markdown_content(content):
+    ''' 格式化markdown表格内容 '''
+    content = content.replace('&', '&amp;')
+    content = content.replace('"', '&quot;')
+    content = content.replace('|', '&vert;') # &brvbar;  &vert;
+    content = content.replace('<', '&lt;')
+    content = content.replace('>', '&gt;')
+    content = content.replace(' ', '&nbsp;')
+    content = content.replace('\r\n', '<br />')
+    content = content.replace('\n', '<br />')
+    return content
+
 
 def build_content(content, mode):
     ''' 构造保存文件内容 '''
@@ -196,6 +212,7 @@ def build_content(content, mode):
         title = sep
         horizontal = sep
         beginIndex = content['title']['beginIndex']
+
         for i in range(maxBeginIndex, maxEndIndex + 1):
             if i < beginIndex:
                 title += sep
@@ -203,7 +220,7 @@ def build_content(content, mode):
                 continue
             idx = i - beginIndex
             if idx < len(content['title']['data']):
-                title += str(content['title']['data'][idx]['content'])
+                title += format_markdown_content(str(content['title']['data'][idx]['content']))
                 horizontal += get_markdown_horizontal(content['title']['data'][idx]['horizontal'])
             title += sep
             horizontal += sep
@@ -219,7 +236,7 @@ def build_content(content, mode):
                     continue
                 idx = i - beginIndex
                 if idx < len(row['data']):
-                    c += str(row['data'][idx]['content'])
+                    c += format_markdown_content(str(row['data'][idx]['content']))
                 c += sep
             md += c + linesep
         return md
@@ -239,15 +256,6 @@ def save_excel_info(contents, path, mode):
         c = build_content(content, mode)
         filePath = os.path.join(path, k+'.md')
         file_utils.write_file(filePath, c)
-
-
-
-
-
-
-
-
-
 
 
 def run(args):
