@@ -28,6 +28,20 @@ Parameter Description:
 |-t|--target|N|./{fileName}/|Output target path. Do not pass the default current directory. If the directory does not exist, it will be created automatically.|
 
 
+### View Results 
+```bash
+more demo1/test1.md 
+```
+
+```markdown
+|短参数名|长参数名|是否必传|默认值|描述|
+|:--|:--|:--:|:--:|:--|
+|-e|--excel|Y||指定需要转换的excel文件路径|
+|-m|--mode|N|md|指定转换格式,&nbsp;可选参数:&nbsp;md(markdown)和json.&nbsp;<br />不传默认为md.&nbsp;目前仅支持md;|
+|-s|--sheets|N|''|指定输出哪些sheet表格,&nbsp;不传输出所有;|
+|-t|--target|N|./{fileName}/|输出目标路径.&nbsp;不传默认当前目录.&nbsp;<br />如果目录不存在则会自动创建;|
+
+```
 
 ## License
 
