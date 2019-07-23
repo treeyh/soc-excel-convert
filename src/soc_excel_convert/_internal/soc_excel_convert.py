@@ -36,23 +36,26 @@ content内容结构：
 
 {
     "sheetName": {
-        "maxBeginIndex" : 1,
-        "maxEndIndex" : 3,
+        "maxBeginIndex": 1,
+        "maxEndIndex": 3,
         "title": {
             "beginIndex": 1,
             "endIndex": 3,
             "data": [
                 {
                     "content": "name1",
-                    "horizontal": "left"
+                    "horizontal": "left",
+                    "link": "http://xxx.xxx.xxx/"
                 },
                 {
                     "content": "name2",
-                    "horizontal": "middle"
+                    "horizontal": "middle",
+                    "link": "http://xxx.xxx.xxx/"
                 },
                 {
                     "content": "name3",
-                    "horizontal": "right"
+                    "horizontal": "right",
+                    "link": "http://xxx.xxx.xxx/"
                 }
             ]
         },
@@ -62,14 +65,17 @@ content内容结构：
                 "endIndex": 3,
                 "data": [
                     {
-                    "content": "name1"
-                },
-                {
-                    "content": "name2"
-                },
-                {
-                    "content": "name3"
-                }
+                        "content": "name1",
+                        "link": "http://xxx.xxx.xxx/"
+                    },
+                    {
+                        "content": "name2",
+                        "link": "http://xxx.xxx.xxx/"
+                    },
+                    {
+                        "content": "name3",
+                        "link": "http://xxx.xxx.xxx/"
+                    }
                 ]
             },
             {
@@ -77,14 +83,17 @@ content内容结构：
                 "endIndex": 3,
                 "data": [
                     {
-                    "content": "name1"
-                },
-                {
-                    "content": "name2"
-                },
-                {
-                    "content": "name3"
-                }
+                        "content": "name1",
+                        "link": "http://xxx.xxx.xxx/"
+                    },
+                    {
+                        "content": "name2",
+                        "link": "http://xxx.xxx.xxx/"
+                    },
+                    {
+                        "content": "name3",
+                        "link": "http://xxx.xxx.xxx/"
+                    }
                 ]
             }
         ]
@@ -95,7 +104,7 @@ content内容结构：
 
 def read_excel(excelPath, sheets):
     ''' 读取excel内容 '''
-    wb = excel_utils.open_excel(excelPath, readOnly=True)
+    wb = excel_utils.open_excel(excelPath)
 
     sheetNames = excel_utils.get_sheet_names(wb)
 
@@ -142,19 +151,26 @@ def read_excel_content(wb, sheetName):
             if value is None:
                 value = ""
 
+            columnName = excel_utils.get_column_code_by_index(colIndex)
+            cell = ws[columnName + str(rowIndex)]
+
+
+            link = None
+            if None is not cell.hyperlink:
+                link = cell.hyperlink.target if None is not cell.hyperlink.target and "" != cell.hyperlink.target else None
+
             if content['maxBeginIndex'] < 1:
                 # 还没有标题，需要分析标题对齐位置
 
-                columnName = excel_utils.get_column_code_by_index(colIndex)
-                cell = ws[columnName + str(rowIndex)]
+                info = {'content': value, 'horizontal': cell.alignment.horizontal, 'link': link}
 
-                info = {'content': value, 'horizontal': cell.alignment.horizontal}
                 row["data"].append(info)
                 pass
             else:
                 # 已有标题
                 row["data"].append({
-                    "content": value
+                    'content': value,
+                    'link': link
                 })
 
 
@@ -186,15 +202,21 @@ def get_markdown_horizontal(horizontal):
 
 def format_markdown_content(content):
     ''' 格式化markdown表格内容 '''
-    content = content.replace('&', '&amp;')
-    content = content.replace('"', '&quot;')
-    content = content.replace('|', '&vert;') # &brvbar;  &vert;
-    content = content.replace('<', '&lt;')
-    content = content.replace('>', '&gt;')
-    content = content.replace(' ', '&nbsp;')
-    content = content.replace('\r\n', '<br />')
-    content = content.replace('\n', '<br />')
-    return content
+    c = str(content.get('content', ''))
+    link = content.get('link', None)
+    c = c.replace('&', '&amp;')
+    c = c.replace('"', '&quot;')
+    c = c.replace('|', '&vert;') # &brvbar;  &vert;
+    c = c.replace('<', '&lt;')
+    c = c.replace('>', '&gt;')
+    c = c.replace(' ', '&nbsp;')
+    c = c.replace('\r\n', '<br />')
+    c = c.replace('\n', '<br />')
+
+    if link is None or '' == link:
+        return c
+    else:
+        return "[%s](%s)" % (c, link)
 
 
 def build_content(content, mode):
@@ -220,7 +242,7 @@ def build_content(content, mode):
                 continue
             idx = i - beginIndex
             if idx < len(content['title']['data']):
-                title += format_markdown_content(str(content['title']['data'][idx]['content']))
+                title += format_markdown_content(content['title']['data'][idx])
                 horizontal += get_markdown_horizontal(content['title']['data'][idx]['horizontal'])
             title += sep
             horizontal += sep
@@ -236,7 +258,7 @@ def build_content(content, mode):
                     continue
                 idx = i - beginIndex
                 if idx < len(row['data']):
-                    c += format_markdown_content(str(row['data'][idx]['content']))
+                    c += format_markdown_content(row['data'][idx])
                 c += sep
             md += c + linesep
         return md
@@ -284,8 +306,6 @@ def run(args):
     save_excel_info(contents, target, args.mode)
 
     return 0
-
-
 
 
 
