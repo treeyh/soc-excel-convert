@@ -29,6 +29,10 @@ Parameter Description:
 
 
 
+## License
+
+[Apache 2.0 License.](https://github.com/treeyh/soc-excel-convert/blob/master/LICENSE)
+
 ## Thank you
 
 If you have any questions. 

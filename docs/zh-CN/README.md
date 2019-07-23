@@ -27,7 +27,9 @@ soc-excel-convert -e ./test/excel/demo1.xlsx
 |-s|--sheets|N|''|指定输出哪些sheet表格, 不传输出所有;|
 |-t|--target|N|./{fileName}/|输出目标路径. 不传默认当前目录. <br />如果目录不存在则会自动创建;|
 
+## License
 
+[Apache 2.0 License.](https://github.com/treeyh/soc-excel-convert/blob/master/LICENSE)
 
 ## 感谢使用
 
