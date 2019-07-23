@@ -21,7 +21,7 @@ else:
 
 setup(
     name="soc-excel-convert",
-    version="1.0.0",
+    version="0.9.2",
     author="Tree",
     author_email="tree@ejyi.com",
     description="Convert Excel to markdown ....",
@@ -35,10 +35,10 @@ setup(
         where="src",
         exclude=["docs"],
     ),
-    license="Apache License Version 2.0",
+    license='Apache License 2.0',
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: Apache License Version 2.0",
+        'License :: OSI Approved :: Apache Software License',
         "Operating System :: OS Independent",
     ],
 
