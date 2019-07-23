@@ -7,16 +7,14 @@ import argparse
 
 
 
-from utils import excel_utils, file_utils, str_utils
-from result_code import ResultCode
+from soc_excel_convert._utils import excel_utils, file_utils, str_utils
+from soc_excel_convert._internal.result_code import ResultCode
 
 
 
 
-def print_msg(msg, result_code = None):
+def print_msg(msg):
     print(str_utils.json_encode(msg))
-    if None != result_code:
-        sys.exit(result_code)
 
 
 def read_args():
@@ -252,22 +250,21 @@ def save_excel_info(contents, path, mode):
 
 
 
-def run():
-    args = read_args()
+def run(args):
 
     if None == args.excel:
-        print_msg('file path is none.', ResultCode.PARAMS_ERROR)
+        print_msg('file path is none.')
+        return ResultCode.PARAMS_ERROR
 
     if not os.path.isfile(args.excel):
-        print_msg('file path is none.', ResultCode.EXCEL_FILE_NOT_EXIST)
+        print_msg('file path is none.')
+        return ResultCode.EXCEL_FILE_NOT_EXIST
 
     sheets = []
     if args.sheets is not None and args.sheets != '':
         sheets = args.sheets.split(',')
 
     contents = read_excel(args.excel, sheets)
-
-    print_msg(contents)
 
     target = args.target
     if None == args.target or "" == args.target:
@@ -278,16 +275,11 @@ def run():
         mode = "md"
     save_excel_info(contents, target, args.mode)
 
+    return 0
 
 
 
 
-
-
-if __name__ == '__main__':
-    run()
-    # for i in range(1, 10):
-    #     print(i)
 
 
 
