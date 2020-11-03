@@ -22,10 +22,11 @@ Parameter Description:
 
 |Short parameter name|Long parameter name|Must|Default|Description|
 |:--|:--|:--:|:--:|:--|
-|-e|--excel|Y|None|Specify the path to the excel file to be converted|
+|-e|--excel|Y|None|Specify the path to the excel file to be converted.If it is empty, it will get excel data from the clipboard by default.|
 |-m|--mode|N|md|Specify the conversion format, optional parameters: md (markdown) and json. Do not pass the default to md. Currently only supports md;|
 |-s|--sheets|N|''|Specify which sheet tables to output, default output all|
 |-t|--target|N|./{fileName}/|Output target path. Do not pass the default current directory. If the directory does not exist, it will be created automatically.|
+|-c|--copy|N|''|Fill in "copy" to output the escaped markdown table content in the clipboard.Default not output. |
 
 
 ### View Results 

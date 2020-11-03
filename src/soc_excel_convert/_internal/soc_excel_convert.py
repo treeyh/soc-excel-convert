@@ -4,7 +4,7 @@ import os
 import sys
 
 import argparse
-
+import pyperclip
 
 
 from soc_excel_convert._utils import excel_utils, file_utils, str_utils
@@ -20,11 +20,12 @@ def print_msg(msg):
 def read_args():
     ''' read command line args '''
     parser = argparse.ArgumentParser()
-    parser.add_argument("-e", "--excel", help="Excel file path.")
+    parser.add_argument("-e", "--excel", help="Excel file path. If it is empty, it will get excel data from the clipboard by default.")
     parser.add_argument("-m", "--mode", help = "Convert format.support:md (markdown); default md.", action="store_true", default = "md")
     parser.add_argument("-t", "--target", help="Target file path. Default ./{FileName}/ ", action="store_true", default = "")
     parser.add_argument("-s", "--sheets", help="Convert excel sheet name. Default all sheets. Multiple comma separated.", action="store_true",
                         default="")
+    parser.add_argument("-c", "--copy", help = "Output clipboard contents.Default not output.", action="store_true", default = "")
 
     return parser.parse_args()
 
@@ -280,11 +281,54 @@ def save_excel_info(contents, path, mode):
         file_utils.write_file(filePath, c)
 
 
+def format_clipboard_content(c):
+    ''' 转义剪贴板中单元格内容，为了适配单元格内容中有换行符前后默认会加引号 '''
+    if len(c) >= 6:
+        if c[:3] == '"""' and c[-3:] == '"""':
+            return c[3:-3]
+    if len(c) >= 3:
+        if c[:1] == '"' and c[-1:] == '"':
+            return c[1:-1]
+    return c
+
+
+def clipboard_to_markdown(cb):
+    ''' 将剪贴板中的excel表格内容转义成markdown内容 '''
+    content = ''
+    index = 0
+    print(cb)
+
+    for line in cb.split('\r\n'):
+        if line.strip() == '':
+            continue
+
+        ls = line.replace('\n', '<br />').split('\t')
+        for l in ls:
+            content += '| ' + format_clipboard_content(l) +' '
+        content += '|\n'
+
+        if index == 0:
+            # 补头
+            for l in ls:
+                content += '|:--'
+            content += '|\n'
+        index += 1
+    pyperclip.copy(content)
+    return 0
+
+
 def run(args):
 
+    cb = pyperclip.paste()
     if None == args.excel:
-        print_msg('file path is none.')
-        return ResultCode.PARAMS_ERROR
+        if cb == None or cb == '':
+            print_msg('file path or clipboard is none.')
+            return ResultCode.PARAMS_ERROR
+        else:
+            result = clipboard_to_markdown(cb)
+            if args.copy == 'copy':
+                pyperclip.paste()
+            return result
 
     if not os.path.isfile(args.excel):
         print_msg('file path is none.')

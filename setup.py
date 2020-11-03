@@ -7,13 +7,13 @@ from setuptools import find_packages, setup
 
 
 if os.path.exists("requirements.txt"):
-    with open("README.md", "r") as fh:
+    with open("README.md", "r", encoding='UTF-8') as fh:
         long_description = fh.read()
 else:
     long_description = ""
 
 if os.path.exists("requirements.txt"):
-    with open("requirements.txt", "r") as fh:
+    with open("requirements.txt", "r", encoding='UTF-8') as fh:
         install_requires = fh.read().split("\n")
 else:
     install_requires = []
@@ -21,7 +21,7 @@ else:
 
 setup(
     name="soc-excel-convert",
-    version="0.9.3",
+    version="0.9.5",
     author="Tree",
     author_email="tree@ejyi.com",
     description="Convert Excel to markdown ....",
