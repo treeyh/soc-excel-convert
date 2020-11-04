@@ -17,7 +17,7 @@ def read_args():
     parser.add_argument("-t", "--target", help="Target file path. Default ./{FileName}/ ", action="store_true", default = "")
     parser.add_argument("-s", "--sheets", help="Convert excel sheet name. Default all sheets. Multiple comma separated.", action="store_true",
                         default="")
-    parser.add_argument("-c", "--copy", help = "Output clipboard contents.Default not output.", action="store_true", default = "")
+    parser.add_argument("-p", "--paste", help = "Output clipboard contents.Default not output.",  action="store_true", default = False)
 
     return parser.parse_args()
 

@@ -296,8 +296,6 @@ def clipboard_to_markdown(cb):
     ''' 将剪贴板中的excel表格内容转义成markdown内容 '''
     content = ''
     index = 0
-    print(cb)
-
     for line in cb.split('\r\n'):
         if line.strip() == '':
             continue
@@ -326,7 +324,7 @@ def run(args):
             return ResultCode.PARAMS_ERROR
         else:
             result = clipboard_to_markdown(cb)
-            if args.copy == 'copy':
+            if True == args.paste:
                 pyperclip.paste()
             return result
 

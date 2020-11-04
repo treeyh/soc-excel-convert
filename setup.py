@@ -21,7 +21,7 @@ else:
 
 setup(
     name="soc-excel-convert",
-    version="0.9.5",
+    version="1.0.0",
     author="Tree",
     author_email="tree@ejyi.com",
     description="Convert Excel to markdown ....",
