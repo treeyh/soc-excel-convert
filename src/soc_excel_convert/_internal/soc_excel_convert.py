@@ -289,7 +289,7 @@ def save_excel_info(contents, path, mode):
         file_utils.write_file(filePath, c)
 
 
-def format_clipboard_content(c):
+def format_clipboard_quotes(c):
     ''' 转义剪贴板中单元格内容，为了适配单元格内容中有换行符前后默认会加引号 '''
     if len(c) >= 6:
         if c[:3] == '"""' and c[-3:] == '"""':
@@ -299,6 +299,13 @@ def format_clipboard_content(c):
             return c[1:-1]
     return c
 
+
+def format_clipboard_html_quotes(c):
+    ''' 转义剪贴板中单元格内容, html转义后，为了适配单元格内容中有换行符前后默认会加引号 '''
+    if len(c) >= 11:
+        if c[:6] == '&quot;' and c[-6:] == '&quot;':
+            return c[6:-6]
+    return c
 
 def clipboard_to_markdown(cb):
     ''' 将剪贴板中的excel表格内容转义成markdown内容 '''
@@ -310,7 +317,7 @@ def clipboard_to_markdown(cb):
 
         ls = format_markdown_by_content(line).split('\t')
         for l in ls:
-            content += '| ' + format_clipboard_content(l) +' '
+            content += '| ' + format_clipboard_html_quotes(l) +' '
         content += '|\n'
 
         if index == 0:
