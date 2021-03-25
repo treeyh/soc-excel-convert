@@ -2,6 +2,7 @@
 
 import os
 import sys
+import html
 
 import argparse
 import pyperclip
@@ -205,19 +206,26 @@ def format_markdown_content(content):
     ''' 格式化markdown表格内容 '''
     c = str(content.get('content', ''))
     link = content.get('link', None)
-    c = c.replace('&', '&amp;')
-    c = c.replace('"', '&quot;')
-    c = c.replace('|', '&vert;') # &brvbar;  &vert;
-    c = c.replace('<', '&lt;')
-    c = c.replace('>', '&gt;')
-    c = c.replace(' ', '&nbsp;')
-    c = c.replace('\r\n', '<br />')
-    c = c.replace('\n', '<br />')
+    c = format_markdown_by_content(c)
 
     if link is None or '' == link:
         return c
     else:
         return "[%s](%s)" % (c, link)
+
+
+def format_markdown_by_content(content):
+    ''' 格式化markdown表格内容 '''
+    content = content.replace('&', '&amp;')
+    content = content.replace('"', '&quot;')
+    content = content.replace('|', '&vert;') # &brvbar;  &vert;
+    content = content.replace('<', '&lt;')
+    content = content.replace('>', '&gt;')
+    content = content.replace(' ', '&nbsp;')
+    content = content.replace('\r\n', '<br />')
+    content = content.replace('\n', '<br />')
+
+    return content
 
 
 def build_content(content, mode):
@@ -300,7 +308,7 @@ def clipboard_to_markdown(cb):
         if line.strip() == '':
             continue
 
-        ls = line.replace('\n', '<br />').split('\t')
+        ls = format_markdown_by_content(line).split('\t')
         for l in ls:
             content += '| ' + format_clipboard_content(l) +' '
         content += '|\n'
